@@ -51,7 +51,8 @@ double MapSearcher::one_iter()
 	{
 		bool newd=true;
 		for (int i = 0; i < this->ant_num; i++)
-			newd = this->ants[i].choose_next(this);
+			if(this->ants[i].available)
+				newd = this->ants[i].choose_next(this);
 		if (newd == false)
 			break;
 	}
@@ -65,7 +66,8 @@ double MapSearcher::one_iter()
 			for (auto num = this->refresh_mat[i * this->point_num + j].begin(); num < this->refresh_mat[i * this->point_num + j].end(); num++)
 			{
 				Ant* tant = &(this->ants[*num]);
-				dt(i, j) =  msum / tant->route_length;//这里1的系数是否合理,有待确证
+				if(tant->available)//如果走完全程才更新
+					dt(i, j) =  msum / tant->route_length;//这里1的系数是否合理,有待确证
 			}
 		}
 	}
@@ -81,7 +83,7 @@ double MapSearcher::one_iter()
 	for (int i = 0; i < this->ant_num; i++)
 	{
 		Ant* antp = &(this->ants[i]);
-		if (antp->route_length < bestl)
+		if (antp->available && antp->route_length < bestl)
 		{
 			bestl = antp->route_length;
 			bestn = i;

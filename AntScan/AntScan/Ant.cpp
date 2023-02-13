@@ -6,6 +6,7 @@ void Ant::setAnt(int point_now, set<int> allow_points,int antno)
 	this->allow_point = allow_points;
 	this->ant_no = antno;
 	this->route_length = 0;
+	this->available = true;
 }
 Ant::Ant()
 {
@@ -50,6 +51,9 @@ bool Ant::choose_next(MapSearcher* map)
 			return true;
 		}
 	}
+	//已经没法继续走了
+	this->available = false;
+	return true;
     cout<<all_score<<endl<<map->rmat<<endl<<map->tmat;
 	throw "Cannot handle next point";
 }

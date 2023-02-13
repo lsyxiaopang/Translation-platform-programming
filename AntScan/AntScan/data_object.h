@@ -27,11 +27,12 @@ public:
 	bool choose_next(MapSearcher* map);
 	double route_length;
 	vector<int> route;
+	bool available;//判断有没有走完全程
 private:
 	int point_now;
 	set<int> allow_point;
 	//set<int> processed_point	
-	int ant_no;
+	int ant_no;	
 };
 
 class MapSearcher
