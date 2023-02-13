@@ -37,17 +37,17 @@ private:
 class MapSearcher
 {
 public:
-	MatrixXf tmat;//��Ϣ�ؾ���
-	MatrixXf rmat;//���ʾ���
-	vector<int>* refresh_mat;//��Ϣ�ؾ�������б�
+	MatrixXf tmat;//信息素矩阵
+	MatrixXf rmat;//路径矩阵
+	vector<int>* refresh_mat;//信息素刷新所需要的信息(每条路哪些蚂蚁爬过)
 	Ant* ants;
 	int ant_num;
-	int point_num;//�ж��ٸ���
-	double p;//��Ϣ�ص�ÿ�ֲ�����
-	double alpha;//��Ϣ���ж���Ҫ
-	double beta;//�����ж���Ҫ
+	int point_num;//点数
+	double p;//信息素一次迭代后保留量
+	double alpha;//信息素重要程度指数
+	double beta;//路径重要程度指数
     double msum;
-	uniform_real_distribution<double> dis;//���̶��õ������
+	uniform_real_distribution<double> dis;//随机数生成器
 	mt19937 gen;
 
 	double best_now;
