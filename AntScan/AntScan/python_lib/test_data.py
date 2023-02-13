@@ -1,6 +1,8 @@
 import AntScan
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import ticker
+from matplotlib.colors import LogNorm
 
 # rstat=np.random.RandomState(1)
 # testpoint=rstat.random([50,2])*100
@@ -14,7 +16,7 @@ odata=np.array(odata)
 print(odata.shape)
 
 
-test_scan=AntScan.MapSearcher(odata,3,0.99,5,1,1)
+test_scan=AntScan.MapSearcher(odata,3,0.99,10,1,1)
 test_list=[]
 l_list=[]
 for i in range(2000):
@@ -32,6 +34,8 @@ plt.plot(testpoint[bestpath,0],testpoint[bestpath,1],".-")
 plt.show()
 
 tmat=test_scan.tmat
-plt.contourf(np.array(tmat))
+locator = ticker.LogLocator(base=10)
+im=plt.contourf(np.array(tmat),locator=locator)
+clb = plt.colorbar(im, format='%.e', ticks=locator)
 plt.show()
 
