@@ -31,4 +31,7 @@
 *.out
 *.app
 
+# complied files
+*.pyd
+
 .history/**
