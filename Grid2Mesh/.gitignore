@@ -31,5 +31,8 @@
 *.out
 *.app
 
+# complied files
+*.pyd
+
 /.vs/
 /x64/
