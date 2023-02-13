@@ -1,4 +1,4 @@
-#include "data_object.h"
+ï»¿#include "data_object.h"
 
 void Ant::setAnt(int point_now, set<int> allow_points,int antno)
 {
@@ -6,6 +6,7 @@ void Ant::setAnt(int point_now, set<int> allow_points,int antno)
 	this->allow_point = allow_points;
 	this->ant_no = antno;
 	this->route_length = 0;
+	this->available = true;
 }
 Ant::Ant()
 {
@@ -14,15 +15,15 @@ Ant::Ant()
 
 bool Ant::choose_next(MapSearcher* map)
 {
-	//ÏÈÅĞ¶ÏÊÇ²»ÊÇÕÒÍêÁË
+	//å…ˆåˆ¤æ–­æ˜¯ä¸æ˜¯æ‰¾å®Œäº†
 	if (this->allow_point.size() == 0)
 		return false;
-	//ÕâÀïÎÒÃÇ²ÉÓÃÂÖÅÌµÄ·½Ê½½øĞĞ¼ÆËã
+	//è¿™é‡Œæˆ‘ä»¬é‡‡ç”¨è½®ç›˜çš„æ–¹å¼è¿›è¡Œè®¡ç®—
 	// 
-	//Ê×ÏÈ¼ÆËã³öÃ¿Ò»ÖÖÂÖÅÌ¸ÅÂÊÓë¸ÅÂÊ×ÜºÍ
+	//é¦–å…ˆè®¡ç®—å‡ºæ¯ä¸€ç§è½®ç›˜æ¦‚ç‡ä¸æ¦‚ç‡æ€»å’Œ
 	vector<int> dotnum;
 	vector<double> score;
-	double all_score = 0;//¹éÒ»»¯×ÜºÍ
+	double all_score = 0;//å½’ä¸€åŒ–æ€»å’Œ
 	for (auto dnow:this->allow_point)
 	{
 		dotnum.push_back(dnow);
@@ -31,7 +32,7 @@ bool Ant::choose_next(MapSearcher* map)
 		score.push_back(ns);
 		all_score += ns;
 	}
-	//ÏÂÃæ¿ªÊ¼ÂÖÅÌ¶Ä
+	//ä¸‹é¢å¼€å§‹è½®ç›˜èµŒ
 	double sn = 0;
 	double rand = map->dis(map->gen);
 	for (int i = 0; i < dotnum.size(); i++)
@@ -39,17 +40,20 @@ bool Ant::choose_next(MapSearcher* map)
 		sn += score[i] / all_score;
 		if (sn > rand)
 		{
-			//Ñ¡¶¨ĞÂµã
+			//é€‰å®šæ–°ç‚¹
 			int new_point = dotnum[i];
-			(map->refresh_mat+this->point_now*map->point_num+new_point)->push_back(this->ant_no);//±ê¼ÇÒ»ÏÂĞÅÏ¢ËØ¾ØÕó
+			(map->refresh_mat+this->point_now*map->point_num+new_point)->push_back(this->ant_no);//æ ‡è®°ä¸€ä¸‹ä¿¡æ¯ç´ çŸ©é˜µ
 			//this->processed_point.insert(this->point_now);
 			route.push_back(this->point_now);
 			this->route_length += map->rmat(this->point_now, new_point);
-			this->allow_point.erase(this->allow_point.find(new_point));//¸üĞÂµãĞÅÏ¢
+			this->allow_point.erase(this->allow_point.find(new_point));//æ›´æ–°ç‚¹ä¿¡æ¯
 			this->point_now = new_point;
 			return true;
 		}
 	}
+	//å·²ç»æ²¡æ³•ç»§ç»­èµ°äº†
+	this->available = false;
+	return true;
     cout<<all_score<<endl<<map->rmat<<endl<<map->tmat;
 	throw "Cannot handle next point";
 }
