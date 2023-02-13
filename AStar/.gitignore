@@ -34,5 +34,6 @@
 # complied files
 *.pyd
 
+/Grid2Mesh/Debug
 /.vs/
 /x64/

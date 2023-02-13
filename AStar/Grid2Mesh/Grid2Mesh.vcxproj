@@ -24,6 +24,7 @@
     <ProjectGuid>{b72a5d7d-decc-4b7b-a0db-c65144dabea2}</ProjectGuid>
     <RootNamespace>Grid2Mesh</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>AStar</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
