@@ -14,15 +14,17 @@ odata=np.array(odata)
 print(odata.shape)
 
 
-test_scan=AntScan.MapSearcher(odata,3,0.9,5,1,1)
+test_scan=AntScan.MapSearcher(odata,3,0.99,5,1,1)
 test_list=[]
 l_list=[]
-for i in range(200):
+for i in range(2000):
     l_list.append(test_scan.one_iter())
     test_list.append(test_scan.best_now)
-    
-plt.plot(range(200),l_list,"b--",label="the best")
-plt.plot(range(200),test_list,"r--",label="each test")
+
+print(np.array(test_scan.tmat))
+
+plt.plot(range(2000),l_list,"b--",label="the best")
+plt.plot(range(2000),test_list,"r--",label="each test")
 plt.show()
 
 bestpath=test_scan.best_route
@@ -32,3 +34,4 @@ plt.show()
 tmat=test_scan.tmat
 plt.contourf(np.array(tmat))
 plt.show()
+
