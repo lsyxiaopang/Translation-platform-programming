@@ -1,4 +1,4 @@
-#include "data_object.h"
+ï»¿#include "data_object.h"
 
 MapSearcher::~MapSearcher()
 {
@@ -8,32 +8,32 @@ MapSearcher::~MapSearcher()
 MapSearcher::MapSearcher(MatrixXf rmat, int ant_num_per_point,
 	double p, double alpha, double beta,int rand_state)
 {
-	//ÂÖÅÌ¶ÄÓÃµÄËæ»úÊıÓëÖÖ×Ó
+	//è½®ç›˜èµŒç”¨çš„éšæœºæ•°ä¸ç§å­
 	this->dis = uniform_real_distribution<double>(0, 1);
 	this->gen = mt19937(rand_state);
-	//³õÊ¼»¯ÆäËû²ÎÊı
+	//åˆå§‹åŒ–å…¶ä»–å‚æ•°
 	this->rmat = rmat;
 	this->point_num = rmat.rows();
 	this->p = p;
 	this->alpha = alpha;
 	this->beta = beta;
 	this->ant_num = ant_num_per_point * this->point_num;
-	//³õÊ¼»¯ĞÅÏ¢ËØ¾ØÕó
+	//åˆå§‹åŒ–ä¿¡æ¯ç´ çŸ©é˜µ
     double msum=rmat.sum()/this->point_num;
     this->msum=msum;
-	this->tmat = MatrixXf(this->point_num, this->point_num).Ones(this->point_num, this->point_num);//Õâ¸ö0.01ÊÇ·ñºÏÀí,Î´À´ÓĞ´ıÑéÖ¤
-	//³õÊ¼»¯µü´úĞÅÏ¢
+	this->tmat = MatrixXf(this->point_num, this->point_num).Ones(this->point_num, this->point_num);//è¿™ä¸ª0.01æ˜¯å¦åˆç†,æœªæ¥æœ‰å¾…éªŒè¯
+	//åˆå§‹åŒ–è¿­ä»£ä¿¡æ¯
 	this->best_now = 1e8;
 }
 
 double MapSearcher::one_iter()
 {
-	//³õÊ¼»¯ĞÅÏ¢ËØ¸üĞÂ¾ØÕó
+	//åˆå§‹åŒ–ä¿¡æ¯ç´ æ›´æ–°çŸ©é˜µ
 	this->refresh_mat = new vector<int>[this->point_num* this->point_num];
-	//Ê×ÏÈ·ÖÅäËùÓĞµã
+	//é¦–å…ˆåˆ†é…æ‰€æœ‰ç‚¹
 	int ants_per_point = this->ant_num / this->point_num;
 	this->ants = new Ant[this->ant_num];
-	//È»ºó¶ÔÃ¿Ò»Ö»ÂìÒÏ½øĞĞ³õÊ¼»¯
+	//ç„¶åå¯¹æ¯ä¸€åªèš‚èšè¿›è¡Œåˆå§‹åŒ–
 	set<int> stdset;
 	for (int i = 0; i < this->point_num; i++)
 		stdset.insert(i);
@@ -46,7 +46,7 @@ double MapSearcher::one_iter()
 		}
 		stdset.insert(i);
 	}
-	//¿ªÊ¼µü´ú¼ÆËã
+	//å¼€å§‹è¿­ä»£è®¡ç®—
 	while (true)
 	{
 		bool newd=true;
@@ -55,8 +55,8 @@ double MapSearcher::one_iter()
 		if (newd == false)
 			break;
 	}
-	//µü´ú½áÊø,¿ªÊ¼¸üĞÂÏà¹ØĞÅÏ¢
-	//Ê×ÏÈÊÇĞÅÏ¢ËØ¾ØÕó
+	//è¿­ä»£ç»“æŸ,å¼€å§‹æ›´æ–°ç›¸å…³ä¿¡æ¯
+	//é¦–å…ˆæ˜¯ä¿¡æ¯ç´ çŸ©é˜µ
 	MatrixXf dt = MatrixXf::Zero(this->point_num, this->point_num);
 	for (int i = 0; i < this->point_num; i++)
 	{
@@ -65,15 +65,17 @@ double MapSearcher::one_iter()
 			for (auto num = this->refresh_mat[i * this->point_num + j].begin(); num < this->refresh_mat[i * this->point_num + j].end(); num++)
 			{
 				Ant* tant = &(this->ants[*num]);
-				dt(i, j) =  msum / tant->route_length;//ÕâÀï1µÄÏµÊıÊÇ·ñºÏÀí,ÓĞ´ıÈ·Ö¤
+				dt(i, j) =  msum / tant->route_length;//è¿™é‡Œ1çš„ç³»æ•°æ˜¯å¦åˆç†,æœ‰å¾…ç¡®è¯
 			}
 		}
 	}
     //double np=this->p+1;
-	this->tmat = this->tmat *( this->p) + dt;//Ê¹ÓÃ¹«Ê½¸üĞÂ
+	this->tmat = this->tmat *( this->p) + dt;//ä½¿ç”¨å…¬å¼æ›´æ–°
+	//å¯¹äºtmatçˆ†ç‚¸çš„å¯èƒ½ä¿®å¤æ–¹æ¡ˆ,ä½¿ç”¨å¹³å‡å€¼å½’ä¸€åŒ–
+	this->tmat = this->tmat / this->tmat.mean();
 	//***DEBUG!!!!!///
 	//cout << dt << endl<<endl;
-	//È»ºóÊÇ¶ÔÓÚ×î¶ÌÂ·¾¶
+	//ç„¶åæ˜¯å¯¹äºæœ€çŸ­è·¯å¾„
 	double bestl = 1e8;
 	int bestn = -1;
 	for (int i = 0; i < this->ant_num; i++)
@@ -86,13 +88,13 @@ double MapSearcher::one_iter()
 		}
 	}
 	vector<int> bestroute(this->ants[bestn].route);
-	//ÓëÀàÖĞµÄÈ«¾Ö×î¼Ñ±È½Ï
+	//ä¸ç±»ä¸­çš„å…¨å±€æœ€ä½³æ¯”è¾ƒ
 	if (bestl < this->best_now)
 	{
 		this->best_now = bestl;
 		this->best_route = bestroute;
 	}
-	//É¾³ıÊ¹ÓÃµÄÁÙÊ±¾ØÕó
+	//åˆ é™¤ä½¿ç”¨çš„ä¸´æ—¶çŸ©é˜µ
 	delete []this->ants;
 	delete []this->refresh_mat;
 
