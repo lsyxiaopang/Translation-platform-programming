@@ -10,7 +10,6 @@ measure_device="MPS010602"
 measure_ver="1"
 #######################################################
 import os,sys
-opath=os.getcwd()
 sys.path.append(os.path.dirname(__file__))
 ###################电压测量设备#########################
 if measure_type=="Voltage":
@@ -24,4 +23,4 @@ if measure_type=="Voltage":
 else:
     raise KeyError("Wrong measure_type {}".format(measure_type))
 
-os.chdir(opath)
+sys.path.pop()
