@@ -16,7 +16,7 @@ class MeasureControl:
         self.sample_number=128#一次性采样点数
         self.rough_measure_out=pd.DataFrame()
 
-    def measure(self,cmd_input):
+    def measure(self,cmd_input):#TODO 未来应当将其设计为对电压的直接输出
         x,y,z,_=cmd_input
         self.adc_device.data_in(256)#刷写掉可能有问题的缓存
         self.adc_device.data_in(10*self.sample_number)

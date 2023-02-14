@@ -1,7 +1,5 @@
 import py_cui
 import Controller
-import MoveControl
-import MeasureControl
 import pandas as pd
 
 def get_measure_out(rough_measure_out)->list:
