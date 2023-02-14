@@ -1,6 +1,6 @@
 import threading
 import MoveControl
-import MeasureControl
+import Measuredevices
 from time import sleep
 import pandas as pd
 from collections import namedtuple
@@ -58,7 +58,7 @@ class Controller:
         self._move_start=False#是否移动下一步
         self.motor_control=MoveControl.MoveControl(motor_control_portname,
                                                 _ControllerMoveCallback(self))
-        self.measure_control=MeasureControl.MeasureControl()
+        self.measure_control=Measuredevices.MeasureControl()
         # self.measure_control_callback= #这个关于测量器暂时不需要
         self.recall_class=recall_class
         self.motor_status=""#目前我们不单独管这个motor_status,作为一个未来的开发点
@@ -103,7 +103,7 @@ class Controller:
         #首先是基本命令(由三个位移以及一个测量符号位构成,几乎不需要任何操作)
         if len(rough_cmd)==4:
             movecontrolcmd=SingleMove(*rough_cmd[0:3])
-            measurecontrolcmd=SingleMeasure(*rough_cmd)
+            Measuredevicescmd=SingleMeasure(*rough_cmd)
             infocmd=ShowInfo(*rough_cmd)
         else:#多个移动直接无中断进行
             xl=rough_cmd[0:-1:3]
@@ -111,9 +111,9 @@ class Controller:
             zl=rough_cmd[2:-1:3]
             ml=[(x,y,z) for x,y,z in zip(xl,yl,zl)]
             movecontrolcmd=MultiMove(len(ml),ml)
-            measurecontrolcmd=SingleMeasure(*ml[-1],rough_cmd[-1])
-            infocmd=ShowInfo(*measurecontrolcmd)
-        return movecontrolcmd,measurecontrolcmd,infocmd
+            Measuredevicescmd=SingleMeasure(*ml[-1],rough_cmd[-1])
+            infocmd=ShowInfo(*Measuredevicescmd)
+        return movecontrolcmd,Measuredevicescmd,infocmd
 
     def _move(self)->None:
         while(1):#循环执行这个指令,直到没有命令或者停止
@@ -157,6 +157,4 @@ class Controller:
         return self.cmd_now[3]
     
 if __name__=="__main__":
-
-
-         
+    pass
