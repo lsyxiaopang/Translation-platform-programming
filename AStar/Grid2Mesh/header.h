@@ -15,3 +15,9 @@
 #include<Eigen/Dense>
 
 #endif
+
+#ifdef  _DEBUG
+#pragma comment(lib,"opencv_world460d.lib")
+#else
+#pragma comment(lib,"opencv_world460.lib")
+#endif //  _DEBUG
