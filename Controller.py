@@ -1,5 +1,5 @@
 import threading
-import MoveControl
+import MoveController
 import Measuredevices
 from time import sleep
 import pandas as pd
@@ -31,7 +31,7 @@ class ControllerCallbackBase:
     
 
     
-class _ControllerMoveCallback(MoveControl.MoveControlCallbacksBase):
+class _ControllerMoveCallback(MoveController.MoveControlCallbacksBase):
     def __init__(self,controller) -> None:
         self.controller=controller
         super().__init__()
@@ -56,8 +56,8 @@ class Controller:
         self._processing=False#是否正在移动
         self._status="STOP"#记录状态
         self._move_start=False#是否移动下一步
-        self.motor_control=MoveControl.MoveControl(motor_control_portname,
-                                                _ControllerMoveCallback(self))
+        self.motor_control=MoveController.MotorInterface(motor_control_portname,
+                                                call_backs=_ControllerMoveCallback(self))
         self.measure_control=Measuredevices.MeasureControl()
         # self.measure_control_callback= #这个关于测量器暂时不需要
         self.recall_class=recall_class
