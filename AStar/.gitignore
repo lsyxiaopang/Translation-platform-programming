@@ -36,6 +36,5 @@
 
 *.pdb
 /Grid2Mesh/Debug
-/Grid2Mesh/x64/Debug/**
 /.vs/
 /x64/
