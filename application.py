@@ -1,6 +1,7 @@
 import py_cui
 import Controller
 import pandas as pd
+import tkinter.filedialog as tf
 
 def get_measure_out(rough_measure_out)->list:
         rmo:pd.DataFrame=rough_measure_out
@@ -49,13 +50,30 @@ class MoveControllerCUI:
         self.status_now=self.master.add_text_box("Status now",5,3,1,2)
         self.place_now=self.master.add_text_box("Coordinate now",5,5,1,3)
         self.new_command=self.master.add_text_box("New CMD",7,0,1,4)
-        self.change_moving_stat_button=self.master.add_button("Start",7,4,1,4,
+        self.load_many_path_button=self.master.add_button("Import",7,6,1,1,
+                                                          command=self.load_many)
+        self.export_data=self.master.add_button("Export",7,7,1,1,
+                                                command=self.data_output)
+        self.change_moving_stat_button=self.master.add_button("Start",7,4,1,2,
                                                 command=self.change_moving_stat)
         self.command_to_process=self.master.add_scroll_menu("CMD To Process",0,5,5,3)
 
         self.controller=Controller.Controller(None,"COM5",ApplicationControllerCallback(self))
 
         self.new_command.add_key_command(py_cui.keys.KEY_ENTER,self.add_cmd)
+
+    def load_many(self):
+        data_file=tf.askopenfilename(title="请选择数据文件")
+        routes=pd.read_csv(data_file)
+        for i,r in routes.iterrows():
+            cmd=r
+            self.controller.add_cmd(list(cmd),True)
+        self.refresh_todo()
+    
+    def data_output(self):
+        output_file=tf.asksaveasfilename(title="请选择保存csv文件")
+        data=self.controller.measure_control.rough_measure_out
+        data.to_csv(output_file)
 
     def refresh_coordinate(self,coordinate):
         self.place_now.set_text("x:{}\ty:{}\tz:{}".format(coordinate[0],coordinate[1],coordinate[2]))
