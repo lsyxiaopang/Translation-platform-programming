@@ -44,6 +44,7 @@ class MotorInterface:
         self.logger("The motor is unlocked!")
         
     def _home(self):
+        self.logger("Start backing home!")
         self.motor.send_cmd("$H")
         self.logger("Back home!")
         
