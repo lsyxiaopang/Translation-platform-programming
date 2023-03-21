@@ -20,6 +20,7 @@ class MeasureControl:
         self.com=sercom
         self.sample_number=100
         self.rough_measure_out=pd.DataFrame()
+        self.this_rough_data=None
     
     def measure(self,cmd_input):
         x,y,z,_=cmd_input
@@ -30,9 +31,14 @@ class MeasureControl:
             l=self.com.readline()
             l=self.com.readline()
             data=self.com.read(12)
-            datalist.append(struct.unpack("fff",data))
+            unpacked_data=struct.unpack("fff",data)
+            #检查存在错误数据的情况
+            if(max(unpacked_data)>10 or min(unpacked_data)< -10):
+                continue#发现数据错误立刻跳过这一组数据,继续测
+            datalist.append(unpacked_data)
             self.com.read_all()
         outdata=np.array(datalist)
+        self.this_rough_data=outdata
         out_data_dict={
                     "xmean":[outdata[:,0].mean()],
                     "xstd":[outdata[:,0].std()],
@@ -53,3 +59,10 @@ if __name__ == "__main__":
     test=MeasureControl()
     test.measure((1,2,3,True))
     print(test.rough_measure_out)
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    from scipy import stats
+    rdata=test.this_rough_data
+    print(stats.kstest(rdata[:,0],"norm"))
+    sns.distplot(rdata[:,0],hist=False)
+    plt.show()
