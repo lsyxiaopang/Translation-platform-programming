@@ -74,6 +74,7 @@ class Motor:
                 if(nlen==2):
                     for i in back_data:
                         self.logger(i,"debug")
+                    self.ser.read_all()#重新刷写串口,避免前面影响后面
                     return back_data
             if datastr[0:5]=="error" or datastr[0:5]=="ALARM":#发生错误
                 raise MotorError(datastr,self.log)
