@@ -5,8 +5,8 @@
 对于模块的需求
 模块需要有一个MeasureControl,其中支持一个measure方法,输入的是命令元组
 '''
-measure_type="Voltage"
-measure_device="MPS010602"
+measure_type="Magnetic"
+measure_device="QMC5883L"
 measure_ver="1"
 #######################################################
 import os,sys
@@ -19,6 +19,10 @@ if measure_type=="Voltage":
         from mps import *#基于Windows的AD卡,需要相应的包
     else:
         raise KeyError("Wrong measure_device {}".format(measure_device))
+###################磁场测量设备#########################
+elif measure_type=="Magnetic":
+    if measure_device=="QMC5883L":
+        from QMC5883L import *
 ####################错误###############################
 else:
     raise KeyError("Wrong measure_type {}".format(measure_type))
