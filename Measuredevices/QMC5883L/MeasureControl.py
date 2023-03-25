@@ -34,6 +34,7 @@ class MeasureControl:
             unpacked_data=struct.unpack("fff",data)
             #检查存在错误数据的情况
             if(max(unpacked_data)>10 or min(unpacked_data)< -10):
+                self.com.read_all()
                 continue#发现数据错误立刻跳过这一组数据,继续测
             datalist.append(unpacked_data)
             self.com.read_all()
